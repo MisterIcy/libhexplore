@@ -1,0 +1,47 @@
+name: "Continuous Integration"
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "include/**"
+      - "src/**"
+      - "tests/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "include/**"
+      - "src/**"
+      - "tests/**"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup Toolchain"
+        run: |
+          sudo apt-get update -y -qq
+          sudo apt-get install -y -qq \
+            build-essential \
+            cmake \
+      
+      - name: "Build"
+        run: |
+          cmake -S . -B build
+          cmake --build build --config Debug
+
+      - name: "Test"
+        run: |
+          ./build/bin/tests
+
+
+
+      
+
+      
