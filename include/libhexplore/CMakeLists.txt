@@ -1,7 +1,7 @@
 add_library(libhexplore SHARED 
     io/IOWrapper.hpp
+    io/IO.hpp
 )
-
 
 target_include_directories(libhexplore 
     PUBLIC
