@@ -12,16 +12,19 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-if(MSVC)
-    add_compile_options(/W4 /WX)
+if(MINGW)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(tests)
 
 install(DIRECTORY include/ DESTINATION include)
 install(TARGETS hexplore
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
+
+
