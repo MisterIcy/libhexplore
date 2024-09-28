@@ -43,3 +43,8 @@ TEST(IO, OpenFileWhenFileDoesNotExist) {
     EXPECT_FALSE(io.open("non_existent_file.txt"));
     EXPECT_EQ(io.getLastError(), 2);
 }
+
+TEST(IO, IOErrorIsSetToNoneAfterInitialization) {
+    libhexplore::io::IO io;
+    EXPECT_EQ(io.getLastError(), 0);
+}
