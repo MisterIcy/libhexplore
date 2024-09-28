@@ -7,6 +7,11 @@
 #define IO_ERROR_NONE 0 
 #define IO_ERROR_ALREADY_OPEN 1
 #define IO_ERROR_OPEN_FAILED 2
+#define IO_ERROR_FILE_NOT_OPEN 3
+#define IO_ERROR_BUFFER_ALREADY_ALLOCATED 4
+#define IO_ERROR_BUFFER_ALLOC_FAILED 5
+#define IO_ERROR_READ_FAILED 6
+
 
 namespace libhexplore::io {
     /**
@@ -73,6 +78,8 @@ namespace libhexplore::io {
             void clearLastError() {
                 this->lastError = IO_ERROR_NONE;
             }
+
+            virtual bool read(char* buffer, size_t size) = 0;
 
         protected:
             std::string fileName;

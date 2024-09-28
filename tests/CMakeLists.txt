@@ -17,6 +17,17 @@ set (TEST_SOURCES
 
 add_executable(tests ${TEST_SOURCES})
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Building tests with coverage")
+    set(COVERAGE_FLAGS "-fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_FLAGS}")
+    target_link_libraries(
+        tests
+        PRIVATE
+        gcov
+    )
+endif()
+
 target_include_directories(
     tests
     PRIVATE
@@ -29,6 +40,7 @@ target_link_libraries(
     hexplore
     GTest::gtest_main
     GTest::gmock_main
+    gcov
 )
 
 include(GoogleTest)

@@ -28,4 +28,34 @@ namespace libhexplore::io {
             stream.close();
         }
     }
+
+    bool IO::read(char* buffer, std::size_t size) {
+        if (this->isOpen() == false)  {
+            this->setLastError(IO_ERROR_FILE_NOT_OPEN);
+            return false;
+        }
+
+        if (buffer != nullptr) {
+            this->setLastError(IO_ERROR_BUFFER_ALREADY_ALLOCATED);
+            return false;
+        }
+
+        buffer = (char*)std::malloc(sizeof(char) * size + 1);
+
+        if (buffer == nullptr) {
+            this->setLastError(IO_ERROR_BUFFER_ALLOC_FAILED);
+            return false;
+        }
+
+        std::memset(buffer, 0, size + 1);
+
+        this->stream.read(buffer, size);
+        
+        if ((size_t)this->stream.gcount() != size) {
+            this->setLastError(IO_ERROR_READ_FAILED);
+            return false;
+        }
+
+        return true;
+    }
 }
