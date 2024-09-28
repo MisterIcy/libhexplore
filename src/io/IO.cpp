@@ -29,7 +29,7 @@ namespace libhexplore::io {
         }
     }
 
-    bool IO::read(char* buffer, std::size_t size) {
+    bool IO::read(char*& buffer, std::size_t size) {
         if (this->isOpen() == false)  {
             this->setLastError(IO_ERROR_FILE_NOT_OPEN);
             return false;
@@ -49,12 +49,15 @@ namespace libhexplore::io {
 
         std::memset(buffer, 0, size + 1);
 
+        this->stream.seekg(0, std::ios::beg);
         this->stream.read(buffer, size);
-        
+
         if ((size_t)this->stream.gcount() != size) {
             this->setLastError(IO_ERROR_READ_FAILED);
             return false;
         }
+
+        this->clearLastError();
 
         return true;
     }

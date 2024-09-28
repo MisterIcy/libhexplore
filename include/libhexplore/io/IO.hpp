@@ -13,7 +13,7 @@ namespace libhexplore::io {
             bool open(std::string file) override;
             bool isOpen() override;
             void close() override;
-            virtual bool read(char* buffer, std::size_t size) override;
+            virtual bool read(char*& buffer, std::size_t size) override;
     
         private:
             std::fstream stream;

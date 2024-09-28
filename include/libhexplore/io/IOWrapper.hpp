@@ -79,7 +79,7 @@ namespace libhexplore::io {
                 this->lastError = IO_ERROR_NONE;
             }
 
-            virtual bool read(char* buffer, size_t size) = 0;
+            virtual bool read(char*& buffer, size_t size) = 0;
 
         protected:
             std::string fileName;
