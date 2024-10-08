@@ -1,5 +1,5 @@
 add_library(hexplore SHARED 
-    io/IO.cpp
+    io/StandardIO.cpp
 )
 
 target_include_directories(hexplore
@@ -15,6 +15,4 @@ set_target_properties(hexplore PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-if(WIN32)
-    target_compile_definitions(hexplore PRIVATE MY_LIBRARY_EXPORTS)
-endif()
+target_compile_definitions(hexplore PRIVATE LIBHEXPLORE_EXPORTS)
