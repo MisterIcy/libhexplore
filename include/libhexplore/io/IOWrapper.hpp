@@ -24,14 +24,6 @@
 #include <libhexplore/libhexplore.hpp>
 #include <string>
 
-#define IO_ERROR_NONE 0                     // No error occured
-#define IO_ERROR_ALREADY_OPEN 1             // A file is already open
-#define IO_ERROR_OPEN_FAILED 2              // Failed to open a file
-#define IO_ERROR_FILE_NOT_OPEN 3            // No file is currently open
-#define IO_ERROR_BUFFER_ALREADY_ALLOCATED 4 // A buffer is already allocated
-#define IO_ERROR_BUFFER_ALLOC_FAILED 5      // Failed to allocate a buffer
-#define IO_ERROR_READ_FAILED 6              // Failed to read from a file
-
 namespace libhexplore::io {
 /**
  * @interface IOWrapper IOWrapper.hpp
@@ -55,70 +47,21 @@ public:
   /**
    * Default Destructor.
    */
-  virtual ~IOWrapper() {}
+  virtual ~IOWrapper() = default;
 
-  /**
-   * Opens a file both for reading and for writing.
-   *
-   * @param [in] file The path to the file to open.
-   * @return `true` if the file was opened successfully, `false` otherwise. To
-   * get the error code use `getLastError()`.
-   * @see    getLastError()
-   */
-  virtual bool open(std::string file) = 0;
+  virtual int close() = 0;
+  virtual bool eof() = 0;
+  virtual int hasError() = 0;
+  virtual int flush() = 0;
+  virtual int getPosition(fpos_t* position) = 0;
+  virtual bool open(const std::string filename, const std::string mode) = 0;
+  virtual size_t read(void* pointer, const size_t size, const size_t numElements) = 0;
+  virtual int seek(const long int offset, const int whence) = 0;
+  virtual int setPosition(const fpos_t *position) = 0;
+  virtual long int tell() = 0;
+  virtual size_t write(const void* pointer, const size_t size, const size_t numElements) = 0;
+  virtual void rewindFile() = 0;
 
-  /**
-   * Checks if the file is open.
-   *
-   * @return `true` if the file is open, `false` otherwise.
-   */
-  virtual bool isOpen() = 0;
-
-  /**
-   * Closes the file.
-   *
-   * @remark If the file is not open, the function will do nothing.
-   */
-  virtual void close() = 0;
-
-  /**
-   * Returns the last error occured. If no error occured, the function will
-   * return IO_ERROR_NONE.
-   *
-   * @return The last error code.
-   */
-  uint8_t getLastError() { return this->lastError; }
-
-  /**
-   * Clears the last error.
-   */
-  void clearLastError() { this->lastError = IO_ERROR_NONE; }
-
-  /**
-   * Reads data from the file.
-   *
-   * @param [out] buffer A pointer to a buffer that will hold the data read from
-   * the file. The buffer must not be allocated before calling this function; it
-   * will be allocated by the function. The buffer must be deallocated by the
-   * caller.
-   * @param [in] size    The size of the buffer to allocate.
-   * @return `true` if the data was read successfully, `false` otherwise. To get
-   * the error code use `getLastError()`.
-   */
-  virtual bool read(char *&buffer, size_t size) = 0;
-
-protected:
-  std::string fileName;
-
-  /**
-   * Sets the last error.
-   *
-   * @param [in] error The error code.
-   */
-  void setLastError(uint8_t error) { this->lastError = error; }
-
-private:
-  uint8_t lastError = IO_ERROR_NONE;
 };
 } // namespace libhexplore::io
 #endif

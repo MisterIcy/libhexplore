@@ -37,9 +37,9 @@ target_include_directories(
 target_link_libraries(
     tests
     PRIVATE
-    hexplore
     GTest::gtest_main
     GTest::gmock_main
+    hexplore
     gcov
 )
 
