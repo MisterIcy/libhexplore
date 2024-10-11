@@ -1,0 +1,42 @@
+name: Produce Release
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build-linux:
+    name: Build for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare environment
+        run: |
+          apt-get update -y -qq && \
+          apt-get install -y -qq cmake build-essential
+
+      - name: Build
+        run: |
+          cmake -S . --build build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+
+      - name: Run Tests
+        run: |
+          ./build/bin/tests
+
+      - name: Produce Artifact
+        run: |
+          mkdir -p artifact/lib
+          cp build/lib/libhexplore.so* artifact/lib/          
+          cp -R include artifact/
+          rm artifact/include/libhexplore/CMakeLists.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        id: upload-linux-artifact
+        with: 
+          name: libhexplore-linux
+          path: artifact
+          if-no-files-found: error
+          retention-days: 1
+
