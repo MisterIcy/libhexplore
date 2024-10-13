@@ -1,6 +1,8 @@
 add_library(libhexplore SHARED 
     io/IOWrapper.hpp
     io/StandardIO.hpp
+    StringTable.hpp
+    StrinEntry.hpp
 )
 
 target_include_directories(libhexplore 

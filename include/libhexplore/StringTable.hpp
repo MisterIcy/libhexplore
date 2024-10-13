@@ -23,8 +23,30 @@
 
 #include <libhexplore/io/IOWrapper.hpp>
 #include <libhexplore/libhexplore.hpp>
+#include <libhexplore/StringEntry.hpp>
+#include <stdexcept>
+#include <cstring>
+#include <unordered_map>
+#include <functional>
+
+/**
+ * Magic Number of String Table Header
+ */
+#define ST1_MAGIC 0x42545854
 
 namespace libhexplore {
+
+typedef struct
+{
+  uint32_t magic;
+  uint32_t version;
+  uint32_t nEntries;
+  uint32_t addrIdx;
+  uint32_t addrStrLoc;
+  uint32_t addrStrSec;
+  uint32_t addrExtra;
+} ST1Header;
+
 
 /**
  * @class StringTable StringTable.hpp
@@ -46,6 +68,10 @@ public:
    * otherwise.
    */
   int load(std::string file);
+  std::function<void()> onFileLoaded;
+  std::function<void(const StringEntry&)> onStringLoaded;
+  std::function<void()> onDecrypted;
+
 
 private:
   libhexplore::io::IOWrapper *io;
@@ -67,20 +93,12 @@ private:
    *          4. We add 0x33 to the key and the unencrypted byte
    *          5. We repeat the process for the rest of the file
    */
-  int decrypt(char *buffer, std::size_t size);
-
-  /**
-   * Encrypts the buffer to be written to the file.
-   *
-   * @param [in,out] buffer The buffer to encrypt.
-   * @param [in] size The size of the buffer.
-   * @return 0 if the buffer was encrypted successfully, a negative error code
-   * otherwise.
-   * @remark The buffer will be encrypted in place.
-   */
-  int encrypt(char *buffer, std::size_t size);
-
+  void decrypt(char *buffer, std::size_t size);
+  void readHeader(const int* buffer);
   char *buffer = nullptr;
+  StringEntry* extractEntryAt(int index, const char *buffer);
+  ST1Header fileHeader;
+  std::unordered_map<uint32_t, StringEntry*> entries;
 };
 } // namespace libhexplore
 #endif

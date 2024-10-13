@@ -1,5 +1,6 @@
 add_library(hexplore SHARED 
     io/StandardIO.cpp
+    StringTable.cpp
 )
 
 target_include_directories(hexplore
