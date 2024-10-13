@@ -98,7 +98,9 @@ jobs:
           retention-days: 1
 
   publish-release:
-    needs: [build-linux-x64]
+    needs: 
+      - build-linux-x64
+      - build-linux-arm64
     runs-on: ubuntu-latest
     steps: 
 
