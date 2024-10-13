@@ -34,7 +34,7 @@ int StringTable::load(std::string file) {
   for (uint32_t i = 0; i < this->fileHeader.nEntries; i++) {
     StringEntry *entry = this->extractEntryAt(i, buffer);
     this->entries[i] = entry;
-    printf("%s\n", entry->string.c_str());
+    
     if (onStringLoaded) {
       onStringLoaded(*entry);
     }
@@ -100,7 +100,13 @@ void StringTable::readHeader(const int* buffer) {
   this->fileHeader.addrExtra = *(buffer+6);
 
   if (this->fileHeader.magic != ST1_MAGIC) {
-    throw new std::runtime_error("Invalid header signature!");
+    std::string errorMessage;
+    char temp[16];
+    sprintf(temp, "0x%X", this->fileHeader.magic);
+    errorMessage = "Invalid header signature (";
+    errorMessage.append(temp);
+    errorMessage.append(")!\n");
+    throw new std::runtime_error(errorMessage);
   }
 }
 

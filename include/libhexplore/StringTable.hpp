@@ -32,7 +32,7 @@
 /**
  * Magic Number of String Table Header
  */
-#define ST1_MAGIC 0x42545854
+#define ST1_MAGIC 0x54585442
 
 namespace libhexplore {
 
