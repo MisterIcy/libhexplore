@@ -1,9 +1,11 @@
 name: Produce Release
 on:
-  workflow_dispatch: {}
+  push:
+    tags:
+      - '*'
 
 jobs:
-  build-linux:
+  build-linux-x64:
     name: Build for Linux
     runs-on: ubuntu-latest
     steps:
@@ -13,10 +15,13 @@ jobs:
       - name: Prepare environment
         run: |
           sudo apt-get update -y -qq && \
-          sudo apt-get install -y -qq cmake build-essential
+          sudo apt-get install -y -qq cmake build-essential \ 
+          clang-16
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build
         run: |
+          export CC=clang export CXX=clang++
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
           cmake --build build --config Release
 
@@ -30,6 +35,7 @@ jobs:
           cp build/lib/libhexplore.so* artifact/lib/          
           cp -R include artifact/
           rm artifact/include/libhexplore/CMakeLists.txt
+          cd artifact && zip -q -m -r ../libhexplore-${{env.tag}}.zip ./* && cd ..
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -39,4 +45,16 @@ jobs:
           path: artifact
           if-no-files-found: error
           retention-days: 1
+      - name: Release 
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: libhexplore-${{env.tag}}.zip
+          omitBody: true
+          prerelease: true
 
+    
+
+
+
+
+      
