@@ -14,9 +14,8 @@ jobs:
 
       - name: Prepare environment
         run: |
-          sudo apt-get update -y -qq && \
-          sudo apt-get install -y -qq cmake build-essential \ 
-          clang-16
+          sudo apt-get update -y -qq
+          sudo apt-get install -y -qq build-essential cmake clang-16
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build
