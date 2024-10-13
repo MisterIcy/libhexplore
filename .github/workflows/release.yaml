@@ -41,7 +41,7 @@ jobs:
         id: upload-linux-artifact
         with: 
           name: libhexplore-linux
-          path: artifact
+          path: libhexplore-${{env.tag}}.zip
           if-no-files-found: error
           retention-days: 1
       - name: Release 
