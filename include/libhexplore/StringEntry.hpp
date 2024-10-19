@@ -22,8 +22,7 @@
 #define __LIBHEXPLORE_STRINGENTRY_HPP__
 #include <libhexplore/libhexplore.hpp>
 #include <string>
-#include <exception>
-#include <cstring>
+
 
 namespace libhexplore {
 /**
