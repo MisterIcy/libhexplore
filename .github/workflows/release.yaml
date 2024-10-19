@@ -20,7 +20,7 @@ jobs:
       - name: Prepare environment
         run: |
           sudo apt-get update -y -qq
-          sudo apt-get install -y -qq build-essential cmake clang
+          sudo apt-get install -y -qq build-essential cmake clang qtbase5-dev
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build
@@ -61,7 +61,7 @@ jobs:
         run: |
           sudo apt-get update -y -qq
           sudo apt-get install -y -qq build-essential cmake clang binutils-aarch64-linux-gnu \
-          libc6-dev-arm64-cross g++-aarch64-linux-gnu
+          libc6-dev-arm64-cross g++-aarch64-linux-gnu qtbase5-dev
           echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build
